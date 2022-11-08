@@ -2,7 +2,7 @@ using UrlShortener.Modules.Shortner.Models;
 
 namespace UrlShortener.Modules.Shortner.Services;
 
-public class ShortnerService
+public class ShortnerService : IShortnerService
 {
     private readonly ShortnerSettings _settings;
     private readonly IKeyGenerator _keyGenerator;

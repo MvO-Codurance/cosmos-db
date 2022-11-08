@@ -31,7 +31,7 @@ public class ShortnerServiceShould
     public async Task Create_A_Shortened_Url_Entry(
         string url,
         string expectedKey,
-        string expectedId,
+        Guid expectedId,
         [Frozen] IKeyGenerator keyGenerator,
         [Frozen] IShortnerRepository repository,
         ShortnerService sut)
@@ -39,7 +39,7 @@ public class ShortnerServiceShould
         ShortnerEntry entry = new(expectedKey, url);
         
         keyGenerator.CreateKey(Arg.Any<int>()).Returns(expectedKey);
-        repository.CreateEntry(Arg.Any<ShortnerEntry>()).Returns(expectedId);
+        repository.CreateEntry(Arg.Any<ShortnerEntry>()).Returns(expectedId.ToString());
 
         var actualKey = await sut.CreateShortenedUrl(url);
         

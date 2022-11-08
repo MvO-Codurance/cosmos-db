@@ -4,7 +4,7 @@ namespace UrlShortener.Modules.Weather;
 
 public class WeatherModule: IModule
 {
-    public IServiceCollection RegisterModule(IServiceCollection services)
+    public IServiceCollection RegisterModule(IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddSingleton<IWeatherService, WeatherService>();
         return services;

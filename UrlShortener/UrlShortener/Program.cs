@@ -1,11 +1,12 @@
 using UrlShortener.Modules;
+using UrlShortener.Modules.Shortner.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.RegisterModules();
+builder.Services.RegisterModules(builder.Configuration);
 
 var app = builder.Build();
 

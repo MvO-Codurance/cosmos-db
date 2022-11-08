@@ -5,12 +5,14 @@ public static class ModuleExtensions
     // this could also be added into the DI container
     private static readonly List<IModule> RegisteredModules = new();
     
-    public static IServiceCollection RegisterModules(this IServiceCollection services)
+    public static IServiceCollection RegisterModules(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
     {
         var modules = DiscoverModules();
         foreach (var module in modules)
         {
-            module.RegisterModule(services);
+            module.RegisterModule(services, configuration);
             RegisteredModules.Add(module);
         }
         return services;

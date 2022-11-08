@@ -8,6 +8,8 @@ public class ShortnerSettings
     [Range(5, 50)]
     public int KeyLength { get; set; }
 
+    // CS8618: Non-nullable property is uninitialized
+#pragma warning disable CS8618
     [Required]
     public string DatabaseEndpoint { get; set; }
 
@@ -19,5 +21,6 @@ public class ShortnerSettings
 
     [Required]
     public string ContainerName { get; set; }
+#pragma warning restore CS8618
 }
 
