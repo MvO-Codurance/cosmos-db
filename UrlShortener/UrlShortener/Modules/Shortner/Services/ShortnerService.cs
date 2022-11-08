@@ -4,12 +4,12 @@ namespace UrlShortener.Modules.Shortner.Services;
 
 public class ShortnerService
 {
-    private readonly UrlShortnerSettings _settings;
+    private readonly ShortnerSettings _settings;
     private readonly IKeyGenerator _keyGenerator;
     private readonly IShortnerRepository _repository;
 
     public ShortnerService(
-        UrlShortnerSettings settings,
+        ShortnerSettings settings,
         IKeyGenerator keyGenerator,
         IShortnerRepository repository)
     {

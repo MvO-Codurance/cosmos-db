@@ -13,7 +13,7 @@ public class ShortnerServiceShould
     [InlineAutoNSubstituteData("https://www.google.co.uk/")]
     public async Task Return_A_Key_Of_The_Configured_Length(
         string url,
-        [Frozen] UrlShortnerSettings settings,
+        [Frozen] ShortnerSettings settings,
         [Frozen] IKeyGenerator keyGenerator,
         ShortnerService sut)
     {
