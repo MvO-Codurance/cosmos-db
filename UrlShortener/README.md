@@ -11,3 +11,5 @@ Also includes the sample "weather" service to provide an additional "module".
  - Download, install  and start the Cosmos DB Emulator.
  - Create a new database named "UrlShortner".
  - Create a new container named "Entries" with the partition key "/key".
+
+Running the unit tests requires the emulator as well. 

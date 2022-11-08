@@ -33,4 +33,11 @@
       <ProjectReference Include="..\UrlShortener\UrlShortener.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

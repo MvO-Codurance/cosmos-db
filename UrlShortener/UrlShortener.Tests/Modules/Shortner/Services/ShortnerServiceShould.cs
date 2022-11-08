@@ -36,8 +36,6 @@ public class ShortnerServiceShould
         [Frozen] IShortnerRepository repository,
         ShortnerService sut)
     {
-        ShortnerEntry entry = new(expectedKey, url);
-        
         keyGenerator.CreateKey(Arg.Any<int>()).Returns(expectedKey);
         repository.CreateEntry(Arg.Any<ShortnerEntry>()).Returns(expectedId.ToString());
 

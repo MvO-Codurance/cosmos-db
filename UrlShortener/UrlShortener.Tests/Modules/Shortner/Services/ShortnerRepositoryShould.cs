@@ -1,6 +1,8 @@
+using System.Reflection;
 using FluentAssertions;
 using Microsoft.Azure.Cosmos;
-using NSubstitute;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using UrlShortener.Modules.Shortner.Models;
 using UrlShortener.Modules.Shortner.Services;
 using Xunit;
@@ -12,26 +14,44 @@ public class ShortnerRepositoryShould
     [Theory]
     [InlineAutoNSubstituteData]
     public async Task Create_A_New_Shortner_Entry(
-        ShortnerEntry entry,
-        Container container,
-        ShortnerSettings settings)
+        ShortnerEntry entry)
     {
-        var cosmosClient = Substitute.For<CosmosClient>(
-            "https://localhost:8081", 
-            "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", 
-            null as CosmosClientOptions);
+        var settings = GetSettingsForEmulator();
+        var cosmosClient = CreateCosmosClient(settings);
         var sut = new ShortnerRepository(settings, cosmosClient);
-        var createdEntry = Substitute.For<ItemResponse<ShortnerEntry>>();
         
-        cosmosClient.GetContainer(Arg.Any<string>(), Arg.Any<string>()).Returns(container);
-        container.CreateItemAsync<ShortnerEntry>(
-            item: entry,
-            partitionKey: new PartitionKey(entry.Key)
-        ).Returns(Task.FromResult(createdEntry));
-
         var actual = await sut.CreateEntry(entry);
 
         actual.Should().NotBeNull();
         actual.Should().Be(entry.Id);
+    }
+
+    private static ShortnerSettings GetSettingsForEmulator()
+    {
+        var fileProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddJsonFile(fileProvider, "appsettings.json", false, false)
+            .Build();
+
+        var settings = new ShortnerSettings();
+        configuration.Bind("UrlShortner", settings);
+
+        return settings;
+    }
+    
+    private static CosmosClient CreateCosmosClient(ShortnerSettings settings)
+    {
+        var cosmosClientOptions = new CosmosClientOptions
+        {
+            SerializerOptions = new CosmosSerializationOptions
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+            }
+        };
+        
+        return new CosmosClient(
+            settings.DatabaseEndpoint, 
+            settings.PrimaryKey, 
+            cosmosClientOptions);
     }
 }
