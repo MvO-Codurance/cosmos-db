@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
@@ -43,6 +44,19 @@ public class ShortnerModule: IModule
             var key = await shortnerService.CreateShortenedUrl(request.Url);
             return new CreateShortenedUrlResponse(key);
         });
+        
+        endpoints.MapGet("/shortner/{key}", async (
+            [Required][FromRoute] string key,
+            IShortnerService shortnerService) =>
+        {
+            var url = await shortnerService.GetOriginalUrl(key);
+
+            return string.IsNullOrWhiteSpace(url) 
+                ? Results.NotFound() 
+                : Results.Ok(new GetOriginalUrlResponse(url));
+        })
+        .Produces<GetOriginalUrlResponse>()
+        .Produces((int)HttpStatusCode.NotFound);
         
         return endpoints;
     }

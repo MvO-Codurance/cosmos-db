@@ -25,6 +25,36 @@ public class ShortnerRepositoryShould
         actual.Should().NotBeNull();
         actual.Should().Be(entry.Id);
     }
+    
+    [Theory]
+    [InlineAutoNSubstituteData]
+    public async Task Retrieve_A_Previously_Created_Entry_Using_The_Key(
+        ShortnerEntry entry)
+    {
+        var settings = GetSettingsForEmulator();
+        var cosmosClient = CreateCosmosClient(settings);
+        var sut = new ShortnerRepository(settings, cosmosClient);
+        
+        var storedEntryId = await sut.CreateEntry(entry);
+        storedEntryId.Should().NotBeNull();
+        storedEntryId.Should().Be(entry.Id);
+
+        var actualEntry = await sut.GetEntry(entry.Key);
+        actualEntry.Should().BeEquivalentTo(entry);
+    }
+    
+    [Theory]
+    [InlineAutoNSubstituteData]
+    public async Task Retrieve_Null_For_An_Unknown_Key(
+        ShortnerEntry entry)
+    {
+        var settings = GetSettingsForEmulator();
+        var cosmosClient = CreateCosmosClient(settings);
+        var sut = new ShortnerRepository(settings, cosmosClient);
+        
+        var actualEntry = await sut.GetEntry(entry.Key);
+        actualEntry.Should().BeNull();
+    }
 
     private static ShortnerSettings GetSettingsForEmulator()
     {

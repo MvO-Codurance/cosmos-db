@@ -23,4 +23,21 @@ public class ShortnerRepository : IShortnerRepository
 
         return createdItem.Id;
     }
+
+    public async Task<ShortnerEntry?> GetEntry(string key)
+    {
+        var query = new QueryDefinition(query: "SELECT * FROM c WHERE c.key = @key")
+            .WithParameter("@key", key);
+        
+        using FeedIterator<ShortnerEntry> feed = 
+            _container.GetItemQueryIterator<ShortnerEntry>(queryDefinition: query);
+
+        if (feed.HasMoreResults)
+        {
+            FeedResponse<ShortnerEntry>? response = await feed.ReadNextAsync();
+            return response?.FirstOrDefault();
+        }
+
+        return null;
+    }
 }

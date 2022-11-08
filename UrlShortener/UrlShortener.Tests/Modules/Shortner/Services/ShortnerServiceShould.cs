@@ -45,4 +45,19 @@ public class ShortnerServiceShould
         await repository.Received(1).CreateEntry(Arg.Is<ShortnerEntry>(
             x => x.Key == expectedKey && x.Url == url));
     }
+    
+    [Theory]
+    [InlineAutoNSubstituteData]
+    public async Task Return_The_Correct_Url_For_A_Previously_Created_Key(
+        ShortnerEntry entry,
+        [Frozen] IShortnerRepository repository,
+        ShortnerService sut)
+    {
+        repository.GetEntry(Arg.Any<string>()).Returns(entry);
+
+        var actualUrl = await sut.GetOriginalUrl(entry.Key);
+        
+        actualUrl.Should().Be(entry.Url);
+        await repository.Received(1).GetEntry(entry.Key);
+    }
 }

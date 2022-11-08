@@ -27,4 +27,10 @@ public class ShortnerService : IShortnerService
         
         return key;
     }
+
+    public async Task<string?> GetOriginalUrl(string key)
+    {
+        var entry = await _repository.GetEntry(key);
+        return entry?.Url;
+    }
 }
