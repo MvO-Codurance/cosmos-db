@@ -36,9 +36,13 @@ public class ShortnerModule: IModule
     
     public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/shortner", (
+        endpoints.MapPost("/shortner", async (
             [Required][FromBody] CreateShortenedUrlRequest request,
-            IShortnerService shortnerService) => shortnerService.CreateShortenedUrl(request.Url));
+            IShortnerService shortnerService) =>
+        {
+            var key = await shortnerService.CreateShortenedUrl(request.Url);
+            return new CreateShortenedUrlResponse(key);
+        });
         
         return endpoints;
     }
