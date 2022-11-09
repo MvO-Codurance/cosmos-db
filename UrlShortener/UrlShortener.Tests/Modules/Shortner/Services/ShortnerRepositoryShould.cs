@@ -12,7 +12,7 @@ namespace UrlShortener.Tests.Modules.Shortner.Services;
 public class ShortnerRepositoryShould
 {
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoMoqData]
     public async Task Create_A_New_Shortner_Entry(
         ShortnerEntry entry)
     {
@@ -25,7 +25,7 @@ public class ShortnerRepositoryShould
     }
     
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoMoqData]
     public async Task Retrieve_A_Previously_Created_Entry_Using_The_Id(
         ShortnerEntry entry)
     {
@@ -39,7 +39,7 @@ public class ShortnerRepositoryShould
     }
     
     [Theory]
-    [InlineAutoNSubstituteData]
+    [InlineAutoMoqData]
     public async Task Retrieve_Null_For_An_Unknown_Id(
         ShortnerEntry entry)
     {

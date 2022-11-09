@@ -1,15 +1,15 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoNSubstitute;
+using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 
 namespace UrlShortener.Tests
 {
     /// <summary>
-    /// Inline auto NSubstitute data attribute to allow for inline auto fixture test models as well as NSubstitute based items
+    /// Inline auto Moq data attribute to allow for inline auto fixture test models as well as Moq based items
     /// </summary>
-    public class InlineAutoNSubstituteDataAttribute : InlineAutoDataAttribute
+    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
     {
-        public InlineAutoNSubstituteDataAttribute(params object[] values)
+        public InlineAutoMoqDataAttribute(params object[] values)
             : base(new AutoNSubstituteDataAttribute(), values)
         {
         }
@@ -23,7 +23,7 @@ namespace UrlShortener.Tests
                 : base(() =>
                 {
                     var fixture = new Fixture();
-                    fixture.Customize(new CompositeCustomization(new AutoNSubstituteCustomization()));
+                    fixture.Customize(new CompositeCustomization(new AutoMoqCustomization()));
                     return fixture;
                 })
             {
