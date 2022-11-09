@@ -37,9 +37,8 @@ public class ShortnerRepositoryShould
         
         var storedEntryId = await sut.CreateEntry(entry);
         storedEntryId.Should().NotBeNull();
-        storedEntryId.Should().Be(entry.Id);
 
-        var actualEntry = await sut.GetEntry(entry.Key);
+        var actualEntry = await sut.GetEntry(entry.Id);
         actualEntry.Should().BeEquivalentTo(entry);
     }
     
@@ -52,7 +51,7 @@ public class ShortnerRepositoryShould
         var cosmosClient = CreateCosmosClient(settings);
         var sut = new ShortnerRepository(settings, cosmosClient);
         
-        var actualEntry = await sut.GetEntry(entry.Key);
+        var actualEntry = await sut.GetEntry(entry.Id);
         actualEntry.Should().BeNull();
     }
 

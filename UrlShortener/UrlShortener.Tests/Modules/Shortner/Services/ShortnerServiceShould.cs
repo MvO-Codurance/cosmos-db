@@ -30,20 +30,19 @@ public class ShortnerServiceShould
     [InlineAutoNSubstituteData("https://www.google.co.uk/")]
     public async Task Create_A_Shortened_Url_Entry(
         string url,
-        string expectedKey,
-        Guid expectedId,
+        string expectedId,
         [Frozen] IKeyGenerator keyGenerator,
         [Frozen] IShortnerRepository repository,
         ShortnerService sut)
     {
-        keyGenerator.CreateKey(Arg.Any<int>()).Returns(expectedKey);
-        repository.CreateEntry(Arg.Any<ShortnerEntry>()).Returns(expectedId.ToString());
+        keyGenerator.CreateKey(Arg.Any<int>()).Returns(expectedId);
+        repository.CreateEntry(Arg.Any<ShortnerEntry>()).Returns(expectedId);
 
         var actualKey = await sut.CreateShortenedUrl(url);
         
-        actualKey.Should().Be(expectedKey);
+        actualKey.Should().Be(expectedId);
         await repository.Received(1).CreateEntry(Arg.Is<ShortnerEntry>(
-            x => x.Key == expectedKey && x.Url == url));
+            x => x.Id == expectedId && x.Url == url));
     }
     
     [Theory]
@@ -55,9 +54,9 @@ public class ShortnerServiceShould
     {
         repository.GetEntry(Arg.Any<string>()).Returns(entry);
 
-        var actualUrl = await sut.GetOriginalUrl(entry.Key);
+        var actualUrl = await sut.GetOriginalUrl(entry.Id);
         
         actualUrl.Should().Be(entry.Url);
-        await repository.Received(1).GetEntry(entry.Key);
+        await repository.Received(1).GetEntry(entry.Id);
     }
 }

@@ -45,18 +45,18 @@ public class ShortnerModule: IModule
             return new CreateShortenedUrlResponse(key);
         });
         
-        endpoints.MapGet("/shortner/{key}", async (
-            [Required][FromRoute] string key,
+        endpoints.MapGet("/shortner/{id}", async (
+            [Required][FromRoute] string id,
             IShortnerService shortnerService) =>
         {
-            var url = await shortnerService.GetOriginalUrl(key);
+            var url = await shortnerService.GetOriginalUrl(id);
 
             return string.IsNullOrWhiteSpace(url) 
                 ? Results.NotFound() 
                 : Results.Ok(new GetOriginalUrlResponse(url));
         })
         .Produces<GetOriginalUrlResponse>()
-        .Produces((int)HttpStatusCode.NotFound);
+        .Produces(StatusCodes.Status404NotFound);
         
         return endpoints;
     }

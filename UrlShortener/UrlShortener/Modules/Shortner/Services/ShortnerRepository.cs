@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Azure.Cosmos;
 using UrlShortener.Modules.Shortner.Models;
 
@@ -16,28 +17,25 @@ public class ShortnerRepository : IShortnerRepository
     
     public async Task<string> CreateEntry(ShortnerEntry entry)
     {
-        ShortnerEntry createdItem = await _container.CreateItemAsync<ShortnerEntry>(
+        ShortnerEntry createdItem = await _container.CreateItemAsync(
             item: entry,
-            partitionKey: new PartitionKey(entry.Key)
+            partitionKey: new PartitionKey(entry.Id)
         );
 
         return createdItem.Id;
     }
 
-    public async Task<ShortnerEntry?> GetEntry(string key)
+    public async Task<ShortnerEntry?> GetEntry(string id)
     {
-        var query = new QueryDefinition(query: "SELECT * FROM c WHERE c.key = @key")
-            .WithParameter("@key", key);
-        
-        using FeedIterator<ShortnerEntry> feed = 
-            _container.GetItemQueryIterator<ShortnerEntry>(queryDefinition: query);
-
-        if (feed.HasMoreResults)
+        try
         {
-            FeedResponse<ShortnerEntry>? response = await feed.ReadNextAsync();
-            return response?.FirstOrDefault();
+            return await _container.ReadItemAsync<ShortnerEntry>(
+                id: id,
+                partitionKey: new PartitionKey(id));
         }
-
-        return null;
+        catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
     }
 }

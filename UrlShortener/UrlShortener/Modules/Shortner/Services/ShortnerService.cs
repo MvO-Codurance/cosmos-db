@@ -20,17 +20,17 @@ public class ShortnerService : IShortnerService
     
     public async Task<string> CreateShortenedUrl(string url)
     {
-        string key = _keyGenerator.CreateKey(_settings.KeyLength);
-        ShortnerEntry entry = new(key, url);
+        string id = _keyGenerator.CreateKey(_settings.KeyLength);
+        ShortnerEntry entry = new(id, url);
 
         await _repository.CreateEntry(entry);
         
-        return key;
+        return id;
     }
 
-    public async Task<string?> GetOriginalUrl(string key)
+    public async Task<string?> GetOriginalUrl(string id)
     {
-        var entry = await _repository.GetEntry(key);
+        var entry = await _repository.GetEntry(id);
         return entry?.Url;
     }
 }
