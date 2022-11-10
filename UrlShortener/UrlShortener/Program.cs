@@ -1,7 +1,12 @@
 using UrlShortener.Modules;
-using UrlShortener.Modules.Shortner.Models;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    // Ensure we take the environment name from the environment variables.
+    // This is for the integration tests so we can pick up the "appsettings.Testing.json" file. 
+    EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+});
 
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
@@ -22,3 +27,7 @@ app.UseHttpsRedirection();
 app.MapEndpoints();
 
 app.Run();
+
+// required for UrlShortner.IntegrationTests to run as WebApplicationFactory needs an entry point
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class Program { }
