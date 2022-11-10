@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpLogging;
 using UrlShortener.Modules;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -9,11 +10,18 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 });
 
 // Add services to the container.
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.RequestMethod | HttpLoggingFields.RequestPath | HttpLoggingFields.RequestQuery | HttpLoggingFields.RequestBody |
+                            HttpLoggingFields.ResponseStatusCode | HttpLoggingFields.ResponseBody;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterModules(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
