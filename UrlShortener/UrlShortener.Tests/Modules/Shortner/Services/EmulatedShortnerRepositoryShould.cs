@@ -9,7 +9,7 @@ using Xunit;
 
 namespace UrlShortener.Tests.Modules.Shortner.Services;
 
-public class ShortnerRepositoryShould
+public class EmulatedShortnerRepositoryShould
 {
     [Theory]
     [InlineAutoMoqData]

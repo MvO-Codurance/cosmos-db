@@ -12,4 +12,6 @@ Also includes the sample "weather" service to provide an additional "module".
  - Create a new database named "UrlShortner".
  - Create a new container named "Entries" with the partition key "/id".
 
-Running the unit tests requires the emulator as well. 
+The unit tests for the `ShortnerRepository` come in two variants:
+ - one that requires the emulator
+ - one that mocks `CosmosClient` using Moq
