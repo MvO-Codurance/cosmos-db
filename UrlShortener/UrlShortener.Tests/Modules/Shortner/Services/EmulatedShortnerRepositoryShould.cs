@@ -5,7 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using UrlShortener.Modules.Shortner.Models;
 using UrlShortener.Modules.Shortner.Services;
+// ReSharper disable once RedundantUsingDirective
 using Xunit;
+// comment out next line to enable these tests (they hit a Cosmos instance so they are disabled by default)
+using TheoryAttribute = UrlShortener.Tests.DisableTestAttribute;
+
+#pragma warning disable xUnit1008 // Test data attribute should only be used on a Theory. Remove the test data, or add the Theory attribute to the test method.
 
 namespace UrlShortener.Tests.Modules.Shortner.Services;
 
